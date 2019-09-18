@@ -13,8 +13,7 @@ public class datetime extends org.python.types.Module {
     )
     public static org.python.types.Object date(org.python.types.Object year, org.python.types.Object month, org.python.types.Object day) {
         // TODO: validera
-        // super(year, month, day);
-        return new org.python.types.Object(java.util.Date(year, month, day));
+        return new org.python.types.Object(java.util.Date.Date());
     }
 
 
