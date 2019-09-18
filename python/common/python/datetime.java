@@ -15,6 +15,12 @@ public class datetime extends org.python.types.Module {
     @org.python.Attribute
     public static org.python.Object timedelta;
 
+    static {
+        datetime = org.python.types.Type.pythonType(org.python.stdlib.datetime.datetime.class);
+    }
+
+    @org.python.Attribute
+    public static org.python.Object datetime;
 
     // private static class timedelta implements org.python.Class {
     //     public timedelta() {
