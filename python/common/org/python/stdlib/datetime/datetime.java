@@ -5,8 +5,6 @@ import java.time.LocalDate;
 import org.python.types.Int;
 import org.python.types.Object;
 
-
-
 public class datetime extends org.python.types.Object {
     // should these really be attributes too?
     @org.python.Attribute private static Int MIN_YEAR = Int.getInt(1);
@@ -35,9 +33,11 @@ public class datetime extends org.python.types.Object {
     @org.python.Attribute public final org.python.types.Int microsecond;
     @org.python.Attribute public final org.python.types.Object tzinfo;
     @org.python.Attribute public final org.python.types.Int fold;
+    // Class attribute - min?
+    //@org.python.Attribute public org.python.stdlib.datetime.datetime min = new datetime(MIN_YEAR, MIN_MONTH, MIN_DAY);
 
     @org.python.Method(
-            __doc__ = "Datetime constructor ",
+            __doc__ = "Datetime constructor",
             default_args = {}
     )
 
@@ -60,12 +60,7 @@ public class datetime extends org.python.types.Object {
         throw new org.python.exceptions.TypeError("function takes at most 8 positional arguments (" + args.length  + " given)");
       }
 
-      // check if positional argument follows keyword argument
-
-      // at least 3 arguments :
-
-      // "Variable might already have been assigned"
-
+      // assign default values
       Int yearDefault = null;
       Int monthDefault = null;
       Int dayDefault = null;
@@ -143,6 +138,7 @@ public class datetime extends org.python.types.Object {
           dayDefault = (org.python.types.Int) kwargs.get("day");
         }
       }
+
 
       validateDate(yearDefault,monthDefault,dayDefault);
 
@@ -228,7 +224,7 @@ public class datetime extends org.python.types.Object {
 
     @org.python.Method(
             __doc__ = "This method builds the string to be printed out of date and time"
-        )
+    )
 
     public org.python.types.Str __str__() {
         String result = new String();
@@ -278,8 +274,31 @@ public class datetime extends org.python.types.Object {
             }
             result = result + this.microsecond.value;
         }
-
         return new org.python.types.Str(result);
-        }
+    }
 
+    /*
+    @org.python.Method(
+            __doc__ = "Class method - today"
+    )
+    public LocalDateTime today(){
+    LocalDateTime localDT = new LocalDateTime();
+    return localDT.now();
+    }
+
+
+    @org.python.Method(
+            __doc__ = "Instance method - time"
+    )
+    public org.python.Object time(){
+    // not implemented - return time object
+    }
+
+    @org.python.Method(
+            __doc__ = "Instance method - date"
+    )
+    public org.python.Object date(){
+    // not implemented - return date object
+    }
+    */
 }

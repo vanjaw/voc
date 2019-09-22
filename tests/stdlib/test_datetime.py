@@ -196,3 +196,44 @@ class test_datetime(NotImplementedToExpectedFailure, TranspileTestCase):
             except Exception as e:
                 print(e)
             """)
+
+    # Testing for class methods #
+    @expectedFailure
+    def test_datetime_today(self):
+        self.assertCodeExecution("""
+            import datetime
+            print(datetime.datetime.today())
+            """)
+
+    # Testing for class attributes #
+    @expectedFailure
+    def test_datetime_min(self):
+        self.assertCodeExecution("""
+            import datetime
+            print(datetime.datetime.min)
+            """)
+
+    # Testing for instance attributes #
+    def test_datetime_year(self):
+        self.assertCodeExecution("""
+            import datetime
+            date = datetime.datetime(1969, 2, 2)
+            print(date.year)
+            """)
+
+    # Testing for instance methods #
+    @expectedFailure
+    def test_datetime_time(self):
+        self.assertCodeExecution("""
+            import datetime
+            date = datetime.datetime(1969, 2, 2)
+            print(date.time())
+            """)
+
+    @expectedFailure
+    def test_datetime_date(self):
+        self.assertCodeExecution("""
+            import datetime
+            date = datetime.datetime(1969, 2, 2)
+            print(date.date())
+            """)
