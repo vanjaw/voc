@@ -222,15 +222,23 @@ class test_datetime(NotImplementedToExpectedFailure, TranspileTestCase):
             """)
 
     # Testing for instance methods #
-    @expectedFailure
+    #@expectedFailure
     def test_datetime_time(self):
         self.assertCodeExecution("""
             import datetime
-            date = datetime.datetime(1969, 2, 2)
+            date = datetime.datetime(1969, 2, 2, 4, 2, 9)
             print(date.time())
             """)
 
     @expectedFailure
+    def test_datetime_time_no_microsec(self):
+        self.assertCodeExecution("""
+            import datetime
+            date = datetime.datetime(1969, 2, 2, 4, 2)
+            print(date.time())
+            """)
+
+    #@expectedFailure
     def test_datetime_date(self):
         self.assertCodeExecution("""
             import datetime

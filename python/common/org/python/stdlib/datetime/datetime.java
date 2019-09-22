@@ -2,6 +2,8 @@ package org.python.stdlib.datetime;
 
 import java.time.LocalDateTime;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import org.python.types.Int;
 import org.python.types.Object;
 
@@ -34,7 +36,7 @@ public class datetime extends org.python.types.Object {
     @org.python.Attribute public final org.python.types.Object tzinfo;
     @org.python.Attribute public final org.python.types.Int fold;
     // Class attribute - min?
-    //@org.python.Attribute public org.python.stdlib.datetime.datetime min = new datetime(MIN_YEAR, MIN_MONTH, MIN_DAY);
+    // @org.python.Attribute static org.python.stdlib.datetime.datetime min = new datetime(MIN_YEAR, MIN_MONTH, MIN_DAY);
 
     @org.python.Method(
             __doc__ = "Datetime constructor",
@@ -277,28 +279,31 @@ public class datetime extends org.python.types.Object {
         return new org.python.types.Str(result);
     }
 
-    /*
+    // it's about 0,12 sec off  - use timedeltas implementation?
     @org.python.Method(
             __doc__ = "Class method - today"
     )
-    public LocalDateTime today(){
-    LocalDateTime localDT = new LocalDateTime();
-    return localDT.now();
+    public static String today(){
+    LocalDateTime today = LocalDateTime.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
+    return formatter.format(today);
     }
 
-
+    // works as long as microsec != 0
     @org.python.Method(
             __doc__ = "Instance method - time"
     )
-    public org.python.Object time(){
-    // not implemented - return time object
+    public LocalTime time(){
+    LocalTime time = LocalTime.of((int)this.hour.value, (int)this.minute.value, (int)this.second.value, (int)this.microsecond.value);
+    return time;
     }
 
     @org.python.Method(
             __doc__ = "Instance method - date"
     )
-    public org.python.Object date(){
-    // not implemented - return date object
+    public LocalDate date(){
+    LocalDate date = LocalDate.of((int)this.year.value, (int)this.month.value, (int)this.day.value);
+    return date;
     }
-    */
+
 }
