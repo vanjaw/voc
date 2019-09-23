@@ -219,15 +219,47 @@ public class timedelta extends org.python.types.Object {
         __doc__ = "Return repr(self)."
     )
     public org.python.types.Str __repr__() {
-        return new org.python.types.Str(
-            "datetime.timedelta(days=" +
-            ((org.python.types.Str) this.days.__repr__()).value +
-            ", seconds=" +
-            ((org.python.types.Str) this.seconds.__repr__()).value +
-            ", microseconds=" +
-            ((org.python.types.Str) this.microseconds.__repr__()).value +
-            ")"
-        );
+        org.python.types.Int zero = org.python.types.Int.getInt(0);
+
+        boolean includeDays = ((org.python.types.Bool) this.days.__ne__(zero)).value;
+        boolean includeSeconds = ((org.python.types.Bool) this.seconds.__ne__(zero)).value;
+        boolean includeMicroseconds = ((org.python.types.Bool) this.microseconds.__ne__(zero)).value;
+
+
+        if (!includeDays && !includeSeconds && !includeMicroseconds) {
+            return new org.python.types.Str("datetime.timedelta(0)");
+        }
+
+        java.lang.StringBuilder out = new java.lang.StringBuilder();
+
+        out.append("datetime.timedelta(");
+
+        if (includeDays) {
+            out.append("days=");
+            out.append(((org.python.types.Str) this.days.__repr__()).value);
+        }
+
+        if (includeSeconds) {
+            if (includeDays) {
+                out.append(", ");
+            }
+
+            out.append("seconds=");
+            out.append(((org.python.types.Str) this.seconds.__repr__()).value);
+        }
+
+        if (includeMicroseconds) {
+            if (includeDays || includeSeconds) {
+                out.append(", ");
+            }
+
+            out.append("microseconds=");
+            out.append(((org.python.types.Str) this.microseconds.__repr__()).value);
+        }
+
+        out.append(")");
+
+        return new org.python.types.Str(out.toString());
     }
 
     static {
