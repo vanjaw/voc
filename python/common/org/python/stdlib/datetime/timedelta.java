@@ -173,6 +173,12 @@ public class timedelta extends org.python.types.Object {
         this.microseconds = (org.python.types.Int) microsecondsValue;
     }
 
+    private timedelta(org.python.types.Int days, org.python.types.Int seconds, org.python.types.Int microseconds) {
+        this.days = days;
+        this.seconds = seconds;
+        this.microseconds = microseconds;
+    }
+
     @org.python.Method(
         __doc__ = "Return str(self)."
     )
@@ -223,4 +229,17 @@ public class timedelta extends org.python.types.Object {
             ")"
         );
     }
+
+    static {
+        min = new timedelta(org.python.types.Int.getInt(-999999999), org.python.types.Int.getInt(0), org.python.types.Int.getInt(0));
+        max = new timedelta(org.python.types.Int.getInt(999999999), org.python.types.Int.getInt(86399), org.python.types.Int.getInt(999999));
+        resolution = new timedelta(org.python.types.Int.getInt(0), org.python.types.Int.getInt(0), org.python.types.Int.getInt(1));
+    }
+
+    @org.python.Attribute
+    public static org.python.Object min;
+    @org.python.Attribute
+    public static org.python.Object max;
+    @org.python.Attribute
+    public static org.python.Object resolution;
 }
