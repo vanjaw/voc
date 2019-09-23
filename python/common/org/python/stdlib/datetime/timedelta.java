@@ -180,6 +180,20 @@ public class timedelta extends org.python.types.Object {
     }
 
     @org.python.Method(
+        __doc__ = ""
+    )
+    public org.python.Object total_seconds() {
+        return this.microseconds.__add__(
+            this.seconds.__add__(
+                this.days
+                    .__mul__(org.python.types.Int.getInt(24 * 3600))
+            ).__mul__(
+                org.python.types.Int.getInt(1000000)
+            )
+        ).__truediv__(org.python.types.Int.getInt(1000000));
+    }
+
+    @org.python.Method(
         __doc__ = "Return str(self)."
     )
     public org.python.types.Str __str__() {
