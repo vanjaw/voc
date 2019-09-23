@@ -23,7 +23,7 @@ class test_datetime(NotImplementedToExpectedFailure, TranspileTestCase):
     def test_datetime_args_3(self):
         self.assertCodeExecution("""
             import datetime
-            date = datetime.datetime(2001, 9, 11, 5, 3)
+            date = datetime.datetime(1, 9, 11, 5, 3)
             print(date)
         """)
 
@@ -206,11 +206,12 @@ class test_datetime(NotImplementedToExpectedFailure, TranspileTestCase):
             """)
 
     # Testing for class attributes #
-    @expectedFailure
+    #@expectedFailure
     def test_datetime_min(self):
         self.assertCodeExecution("""
             import datetime
-            print(datetime.datetime.min)
+            date = datetime.datetime(1969, 2, 2)
+            print(date.min)
             """)
 
     # Testing for instance attributes #

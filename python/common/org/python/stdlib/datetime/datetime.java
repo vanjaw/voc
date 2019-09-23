@@ -9,34 +9,33 @@ import org.python.types.Object;
 
 public class datetime extends org.python.types.Object {
     // should these really be attributes too?
-    @org.python.Attribute private static Int MIN_YEAR = Int.getInt(1);
-    @org.python.Attribute private static Int MAX_YEAR = Int.getInt(9999);
-    @org.python.Attribute private static Int MIN_MONTH = Int.getInt(1);
-    @org.python.Attribute private static Int MAX_MONTH = Int.getInt(12);
-    @org.python.Attribute private static Int MIN_DAY = Int.getInt(1);
-    @org.python.Attribute private static Int MAX_DAY = Int.getInt(31);
-    @org.python.Attribute private static Int MIN_HOUR = Int.getInt(0);
-    @org.python.Attribute private static Int MAX_HOUR = Int.getInt(23);
-    @org.python.Attribute private static Int MIN_MINUTE = Int.getInt(0);
-    @org.python.Attribute private static Int MAX_MINUTE = Int.getInt(59);
-    @org.python.Attribute private static Int MIN_SECOND = Int.getInt(0);
-    @org.python.Attribute private static Int MAX_SECOND = Int.getInt(59);
-    @org.python.Attribute private static Int MIN_MICROSECOND = Int.getInt(0);
-    @org.python.Attribute private static Int MAX_MICROSECOND = Int.getInt(999999);
-    @org.python.Attribute private static Int MIN_FOLD = Int.getInt(0);
-    @org.python.Attribute private static Int MAX_FOLD = Int.getInt(1);
+    private static Int MIN_YEAR = Int.getInt(1);
+    private static Int MAX_YEAR = Int.getInt(9999);
+    private static Int MIN_MONTH = Int.getInt(1);
+    private static Int MAX_MONTH = Int.getInt(12);
+    private static Int MIN_DAY = Int.getInt(1);
+    private static Int MAX_DAY = Int.getInt(31);
+    private static Int MIN_HOUR = Int.getInt(0);
+    private static Int MAX_HOUR = Int.getInt(23);
+    private static Int MIN_MINUTE = Int.getInt(0);
+    private static Int MAX_MINUTE = Int.getInt(59);
+    private static Int MIN_SECOND = Int.getInt(0);
+    private static Int MAX_SECOND = Int.getInt(59);
+    private static Int MIN_MICROSECOND = Int.getInt(0);
+    private static Int MAX_MICROSECOND = Int.getInt(999999);
+    private static Int MIN_FOLD = Int.getInt(0);
+    private static Int MAX_FOLD = Int.getInt(1);
+    @org.python.Attribute public org.python.types.Int year;
+    @org.python.Attribute public org.python.types.Int month;
+    @org.python.Attribute public org.python.types.Int day;
+    @org.python.Attribute public org.python.types.Int hour;
+    @org.python.Attribute public org.python.types.Int minute;
+    @org.python.Attribute public org.python.types.Int second;
+    @org.python.Attribute public org.python.types.Int microsecond;
+    @org.python.Attribute public org.python.types.Object tzinfo;
+    @org.python.Attribute public org.python.types.Int fold;
 
-    @org.python.Attribute public final org.python.types.Int year;
-    @org.python.Attribute public final org.python.types.Int month;
-    @org.python.Attribute public final org.python.types.Int day;
-    @org.python.Attribute public final org.python.types.Int hour;
-    @org.python.Attribute public final org.python.types.Int minute;
-    @org.python.Attribute public final org.python.types.Int second;
-    @org.python.Attribute public final org.python.types.Int microsecond;
-    @org.python.Attribute public final org.python.types.Object tzinfo;
-    @org.python.Attribute public final org.python.types.Int fold;
-    // Class attribute - min?
-    // @org.python.Attribute static org.python.stdlib.datetime.datetime min = new datetime(MIN_YEAR, MIN_MONTH, MIN_DAY);
+    @org.python.Attribute public static final org.python.stdlib.datetime.datetime min = new datetime(MIN_YEAR, MIN_MONTH, MIN_DAY);
 
     @org.python.Method(
             __doc__ = "Datetime constructor",
@@ -141,12 +140,12 @@ public class datetime extends org.python.types.Object {
         }
       }
 
-
+      // make sure that the date (combiantion of year, month and day) is valid
       validateDate(yearDefault,monthDefault,dayDefault);
 
 
-      // check for remaining arguments knowing that args has been checked
-      // and that all 3 required arguments are valid
+      // check for remaining optional arguments knowing that args
+      // has been checked and that all 3 required arguments are valid
       if((args.length + kwargs.size()) >= 4){
         if(kwargs.get("hour") != null){
           validateInput("hour",(org.python.types.Int) kwargs.get("hour"), MIN_HOUR, MAX_HOUR);
@@ -184,6 +183,24 @@ public class datetime extends org.python.types.Object {
     }
 
     @org.python.Method(
+            __doc__ = "Datetime constructor 2",
+            default_args = {}
+    )
+
+    public datetime(org.python.types.Int year, org.python.types.Int month, org.python.types.Int day) {
+    validateDate(year, month, day);
+    this.year = year;
+    this.month = month;
+    this.day = day;
+    this.hour = Int.getInt(0);
+    this.minute = Int.getInt(0);
+    this.second = Int.getInt(0);
+    this.microsecond = Int.getInt(0);
+    this.tzinfo = null;
+    this.fold = Int.getInt(0);
+    }
+
+    @org.python.Method(
             __doc__ = "Validate input "
     )
 
@@ -201,8 +218,8 @@ public class datetime extends org.python.types.Object {
     private static void valueOutOfRange(String attributeName, org.python.types.Int attribute, org.python.types.Int minValue, org.python.types.Int maxValue){
         String result = new String();
         if(attributeName == "year"){
-          result = attributeName + " " + attribute.toString() + " is out of range";
-        }else if(attributeName == "day"){
+          result = "year " + attribute.toString() + " is out of range";
+        } else if(attributeName == "day"){
           result = "day is out of range for month";
         } else if(attributeName == "fold"){
           result = "fold must be either 0 or 1";
@@ -230,7 +247,16 @@ public class datetime extends org.python.types.Object {
 
     public org.python.types.Str __str__() {
         String result = new String();
-        result = this.year.toString() + "-";
+        if (this.year.value < 1000){
+            result = result + "0";
+            if (this.year.value < 100){
+                result = result + "0";
+                if (this.year.value < 10){
+                    result = result + "0";
+                }
+            }
+        }
+        result = result + this.year.toString() + "-";
 
         if (this.month.value < 10){
             result = result + "0";
@@ -290,12 +316,22 @@ public class datetime extends org.python.types.Object {
     }
 
     // works as long as microsec != 0
+    // find another class method
     @org.python.Method(
             __doc__ = "Instance method - time"
     )
     public LocalTime time(){
     LocalTime time = LocalTime.of((int)this.hour.value, (int)this.minute.value, (int)this.second.value, (int)this.microsecond.value);
     return time;
+
+    /*
+    LocalTime time = LocalTime.of((int)this.hour.value, (int)this.minute.value, (int)this.second.value, (int)this.microsecond.value);
+    String timeStr = time.toString();
+    if (this.microsecond.value == 0){
+      timeStr = timeStr + ":00"
+    }
+    return timeStr;
+    */
     }
 
     @org.python.Method(
