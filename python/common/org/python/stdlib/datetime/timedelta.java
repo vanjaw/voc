@@ -121,7 +121,7 @@ public class timedelta extends org.python.types.Object {
             secondsValue = (org.python.types.Object) secondsValue.__add__(hours.__mul__(org.python.types.Int.getInt(60 * 60)));
         }
         if (microseconds != null) {
-            microsecondsValue = (org.python.types.Object) microsecondsValue;
+            microsecondsValue = (org.python.types.Object) microseconds;
         }
 
         // De-floating
@@ -177,7 +177,36 @@ public class timedelta extends org.python.types.Object {
         __doc__ = "Return str(self)."
     )
     public org.python.types.Str __str__() {
-        return this.__repr__();
+        java.lang.StringBuilder out = new java.lang.StringBuilder();
+
+        if (((org.python.types.Bool) this.days.__abs__().__eq__(org.python.types.Int.getInt(1))).value) {
+            out.append(this.days);
+            out.append(" day, ");
+        } else if (!((org.python.types.Bool) this.days.__eq__(org.python.types.Int.getInt(0))).value) {
+            out.append(this.days);
+            out.append(" days, ");
+        }
+
+        org.python.types.Tuple minutes_seconds = (org.python.types.Tuple) this.seconds.__divmod__(org.python.types.Int.getInt(60));
+        org.python.types.Int minutes = (org.python.types.Int) minutes_seconds.value.get(0);
+        org.python.types.Int seconds = (org.python.types.Int) minutes_seconds.value.get(1);
+
+        org.python.types.Tuple hours_minutes = (org.python.types.Tuple) minutes.__divmod__(org.python.types.Int.getInt(60));
+        org.python.types.Int hours = (org.python.types.Int) hours_minutes.value.get(0);
+        minutes = (org.python.types.Int) hours_minutes.value.get(1);
+
+        out.append(hours);
+        out.append(":");
+        out.append(String.format("%02d", minutes.value));
+        out.append(":");
+        out.append(String.format("%02d", seconds.value));
+
+        if (((org.python.types.Bool) this.microseconds.__eq__(org.python.types.Int.getInt(0))).value) {
+            out.append(".");
+            out.append(String.format("%06d", ((org.python.types.Int) this.microseconds).value));
+        }
+
+        return new org.python.types.Str(out.toString());
     }
 
     @org.python.Method(
