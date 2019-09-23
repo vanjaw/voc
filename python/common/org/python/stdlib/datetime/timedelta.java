@@ -9,7 +9,10 @@ public class timedelta extends org.python.types.Object {
     public final org.python.types.Int microseconds;
 
     @org.python.Method(
-            __doc__ = "",
+            __doc__ = "Difference between two datetime values.\n\n" + 
+            "timedelta(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0)\n\n" +
+            "All arguments are optional and default to 0.\n" +
+            "Arguments may be integers or floats, and may be positive or negative.",
             default_args = {"days", "seconds", "microseconds", "minutes", "hours", "weeks"}
     )
     public timedelta(org.python.Object[] args, java.util.Map<java.lang.String, org.python.Object> kwargs) {
@@ -171,14 +174,14 @@ public class timedelta extends org.python.types.Object {
     }
 
     @org.python.Method(
-        __doc__ = ""
+        __doc__ = "Return str(self)."
     )
     public org.python.types.Str __str__() {
         return this.__repr__();
     }
 
     @org.python.Method(
-        __doc__ = ""
+        __doc__ = "Return repr(self)."
     )
     public org.python.types.Str __repr__() {
         return new org.python.types.Str(
