@@ -13,15 +13,16 @@ public class timedelta extends org.python.types.Object {
             "timedelta(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0)\n\n" +
             "All arguments are optional and default to 0.\n" +
             "Arguments may be integers or floats, and may be positive or negative.",
-            default_args = {"days", "seconds", "microseconds", "minutes", "hours", "weeks"}
+            default_args = {"days", "seconds", "microseconds", "miliseconds", "minutes", "hours", "weeks"}
     )
     public timedelta(org.python.Object[] args, java.util.Map<java.lang.String, org.python.Object> kwargs) {
         org.python.Object days         = args[0];
         org.python.Object seconds      = args[1];
         org.python.Object microseconds = args[2];
-        org.python.Object minutes      = args[3];
-        org.python.Object hours        = args[4];
-        org.python.Object weeks        = args[5];
+        org.python.Object miliseconds  = args[3];
+        org.python.Object minutes      = args[4];
+        org.python.Object hours        = args[5];
+        org.python.Object weeks        = args[6];
 
         if (days != null && kwargs.containsKey("days")) {
             throw new org.python.exceptions.TypeError("argument for __new__() given by name ('days') and position (1)");
@@ -35,16 +36,20 @@ public class timedelta extends org.python.types.Object {
             throw new org.python.exceptions.TypeError("argument for __new__() given by name ('microseconds') and position (3)");
         }
 
+        if (miliseconds != null && kwargs.containsKey("miliseconds")) {
+            throw new org.python.exceptions.TypeError("argument for __new__() given by name ('miliseconds') and position (4)");
+        }
+
         if (minutes != null && kwargs.containsKey("minutes")) {
-            throw new org.python.exceptions.TypeError("argument for __new__() given by name ('minutes') and position (4)");
+            throw new org.python.exceptions.TypeError("argument for __new__() given by name ('minutes') and position (5)");
         }
 
         if (hours != null && kwargs.containsKey("hours")) {
-            throw new org.python.exceptions.TypeError("argument for __new__() given by name ('hours') and position (5)");
+            throw new org.python.exceptions.TypeError("argument for __new__() given by name ('hours') and position (6)");
         }
 
         if (weeks != null && kwargs.containsKey("weeks")) {
-            throw new org.python.exceptions.TypeError("argument for __new__() given by name ('weeks') and position (6)");
+            throw new org.python.exceptions.TypeError("argument for __new__() given by name ('weeks') and position (7)");
         }
 
         for (String key : kwargs.keySet()) {
@@ -52,6 +57,7 @@ public class timedelta extends org.python.types.Object {
                 case "days":
                 case "seconds":
                 case "microseconds":
+                case "miliseconds":
                 case "minutes":
                 case "hours":
                 case "weeks":
@@ -76,6 +82,12 @@ public class timedelta extends org.python.types.Object {
         if (microseconds != null) {
             if (!(microseconds instanceof org.python.types.Int) && !(microseconds instanceof org.python.types.Float)) {
                 throw new org.python.exceptions.TypeError("unsupported type for timedelta microseconds component: " + org.Python.typeName(((org.python.types.Type) microseconds.type()).klass));
+            }
+        }
+        
+        if (miliseconds != null) {
+            if (!(miliseconds instanceof org.python.types.Int) && !(miliseconds instanceof org.python.types.Float)) {
+                throw new org.python.exceptions.TypeError("unsupported type for timedelta miliseconds component: " + org.Python.typeName(((org.python.types.Type) miliseconds.type()).klass));
             }
         }
 
@@ -122,6 +134,9 @@ public class timedelta extends org.python.types.Object {
         }
         if (microseconds != null) {
             microsecondsValue = (org.python.types.Object) microseconds;
+        }
+        if (miliseconds != null) {
+            microsecondsValue = (org.python.types.Object) microsecondsValue.__add__(miliseconds.__mul__(org.python.types.Int.getInt(1000)));
         }
 
         // De-floating
@@ -221,7 +236,7 @@ public class timedelta extends org.python.types.Object {
         out.append(":");
         out.append(String.format("%02d", seconds.value));
 
-        if (((org.python.types.Bool) this.microseconds.__eq__(org.python.types.Int.getInt(0))).value) {
+        if (((org.python.types.Bool) this.microseconds.__ne__(org.python.types.Int.getInt(0))).value) {
             out.append(".");
             out.append(String.format("%06d", ((org.python.types.Int) this.microseconds).value));
         }
