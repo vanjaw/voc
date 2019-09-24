@@ -198,7 +198,7 @@ class test_datetime(NotImplementedToExpectedFailure, TranspileTestCase):
             """)
 
     # Testing for class methods #
-    @expectedFailure
+    #@expectedFailure
     def test_datetime_today(self):
         self.assertCodeExecution("""
             import datetime

@@ -2,6 +2,8 @@ package org.python.stdlib.datetime;
 
 import java.time.LocalDateTime;
 import java.time.LocalDate;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import org.python.types.Int;
@@ -187,7 +189,7 @@ public class datetime extends org.python.types.Object {
             default_args = {}
     )
 
-    public datetime(org.python.types.Int year, org.python.types.Int month, org.python.types.Int day) {
+    private datetime(org.python.types.Int year, org.python.types.Int month, org.python.types.Int day) {
     validateDate(year, month, day);
     this.year = year;
     this.month = month;
@@ -199,6 +201,24 @@ public class datetime extends org.python.types.Object {
     this.tzinfo = null;
     this.fold = Int.getInt(0);
     }
+
+    @org.python.Method(
+            __doc__ = "Datetime constructor 3 - ultimate today()",
+            default_args = {}
+    )
+
+    public datetime(int year, int month, int day, int hour, int minute, int second, int microsecond){
+      this.year = org.python.types.Int.getInt(year);
+      this.month = org.python.types.Int.getInt(month);
+      this.day = org.python.types.Int.getInt(day);
+      this.hour = org.python.types.Int.getInt(hour);
+      this.minute = org.python.types.Int.getInt(minute);
+      this.second = org.python.types.Int.getInt(second);
+      this.microsecond = org.python.types.Int.getInt(microsecond);
+      this.tzinfo = null;
+      this.fold = Int.getInt(0);
+    }
+
 
     @org.python.Method(
             __doc__ = "Validate input "
@@ -309,10 +329,18 @@ public class datetime extends org.python.types.Object {
     @org.python.Method(
             __doc__ = "Class method - today"
     )
-    public static String today(){
-    LocalDateTime today = LocalDateTime.now();
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
-    return formatter.format(today);
+    public static datetime today(){
+      LocalDateTime dateNow = LocalDateTime.now();
+
+      int year = dateNow.getYear();
+      int month = dateNow.getMonthValue();
+      int day = dateNow.getDayOfMonth();
+      int hour = dateNow.getHour();
+      int minute = dateNow.getMinute();
+      int second = dateNow.getSecond();
+      int microsecond = dateNow.getNano() /1000;
+
+    return new datetime(year, month, day, hour, minute, second, microsecond);
     }
 
     // works as long as microsec != 0
