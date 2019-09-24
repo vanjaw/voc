@@ -198,11 +198,17 @@ class test_datetime(NotImplementedToExpectedFailure, TranspileTestCase):
             """)
 
     # Testing for class methods #
-    #@expectedFailure
+    # We are not checking today().second and today().microsecond
+    # because these can vary depending on when the method is called.
     def test_datetime_today(self):
         self.assertCodeExecution("""
             import datetime
-            print(datetime.datetime.today())
+            date_today = datetime.datetime.today()
+            print(date_today.year)
+            print(date_today.month)
+            print(date_today.day)
+            print(date_today.hour)
+            print(date_today.minute)
             """)
 
     # Testing for class attributes #
@@ -223,20 +229,12 @@ class test_datetime(NotImplementedToExpectedFailure, TranspileTestCase):
             """)
 
     # Testing for instance methods #
-    #@expectedFailure
-    def test_datetime_time(self):
+    # @expectedFailure
+    def test_datetime_weekday(self):
         self.assertCodeExecution("""
             import datetime
             date = datetime.datetime(1969, 2, 2, 4, 2, 9)
-            print(date.time())
-            """)
-
-    @expectedFailure
-    def test_datetime_time_no_microsec(self):
-        self.assertCodeExecution("""
-            import datetime
-            date = datetime.datetime(1969, 2, 2, 4, 2)
-            print(date.time())
+            print(date.weekday())
             """)
 
     #@expectedFailure

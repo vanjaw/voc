@@ -1,16 +1,17 @@
 package org.python.stdlib.datetime;
 
+import java.util.Date;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.LocalTime;
+import java.time.DayOfWeek;
 import java.time.format.DateTimeFormatter;
 import org.python.types.Int;
 import org.python.types.Object;
 
 public class datetime extends org.python.types.Object {
-    // should these really be attributes too?
     private static Int MIN_YEAR = Int.getInt(1);
     private static Int MAX_YEAR = Int.getInt(9999);
     private static Int MIN_MONTH = Int.getInt(1);
@@ -41,7 +42,7 @@ public class datetime extends org.python.types.Object {
 
     @org.python.Method(
             __doc__ = "Datetime constructor",
-            default_args = {}
+          default_args = {/*"year", "month", "day", "hour", "minute", "second", "microsecond", "tzinfo", "fold"*/}
     )
 
     public datetime(org.python.Object[] args, java.util.Map<java.lang.String, org.python.Object> kwargs) {
@@ -185,8 +186,8 @@ public class datetime extends org.python.types.Object {
     }
 
     @org.python.Method(
-            __doc__ = "Datetime constructor 2",
-            default_args = {}
+            __doc__ = "Datetime constructor 2 - only the three mandatory arguments",
+            default_args = {"year", "month", "day"}
     )
 
     private datetime(org.python.types.Int year, org.python.types.Int month, org.python.types.Int day) {
@@ -203,8 +204,8 @@ public class datetime extends org.python.types.Object {
     }
 
     @org.python.Method(
-            __doc__ = "Datetime constructor 3 - ultimate today()",
-            default_args = {}
+            __doc__ = "Datetime constructor 3 - used for today() method",
+            default_args = {"year", "month", "day", "hour", "minute", "second", "microsecond"}
     )
 
     public datetime(int year, int month, int day, int hour, int minute, int second, int microsecond){
@@ -221,7 +222,8 @@ public class datetime extends org.python.types.Object {
 
 
     @org.python.Method(
-            __doc__ = "Validate input "
+            __doc__ = "Validate input for each attribute",
+            default_args = {"attributeName", "attribute", "minValue", "maxValue"}
     )
 
     private static void validateInput(String attributeName, org.python.types.Int attribute, org.python.types.Int minValue, org.python.types.Int maxValue){
@@ -234,6 +236,11 @@ public class datetime extends org.python.types.Object {
         }
 
     }
+
+    @org.python.Method(
+            __doc__ = "Display errormessages if an attribute has invalid values",
+            default_args = {"attributeName", "attribute", "minValue", "maxValue"}
+    )
 
     private static void valueOutOfRange(String attributeName, org.python.types.Int attribute, org.python.types.Int minValue, org.python.types.Int maxValue){
         String result = new String();
@@ -251,7 +258,8 @@ public class datetime extends org.python.types.Object {
 
 
     @org.python.Method(
-            __doc__ = "Validate date "
+            __doc__ = "Validate that the combination of year/month/day is a valid date",
+            default_args = {"year", "month", "day"}
     )
     private static void validateDate(org.python.types.Int year, org.python.types.Int month, org.python.types.Int day){
       try{
@@ -262,7 +270,8 @@ public class datetime extends org.python.types.Object {
     }
 
     @org.python.Method(
-            __doc__ = "This method builds the string to be printed out of date and time"
+            __doc__ = "This method builds the string to be printed out of date and time",
+            default_args = {}
     )
 
     public org.python.types.Str __str__() {
@@ -325,9 +334,9 @@ public class datetime extends org.python.types.Object {
         return new org.python.types.Str(result);
     }
 
-    // it's about 0,12 sec off  - use timedeltas implementation?
     @org.python.Method(
-            __doc__ = "Class method - today"
+            __doc__ = "Returns a daytime object of the current date and time.",
+            default_args = {}
     )
     public static datetime today(){
       LocalDateTime dateNow = LocalDateTime.now();
@@ -343,27 +352,20 @@ public class datetime extends org.python.types.Object {
     return new datetime(year, month, day, hour, minute, second, microsecond);
     }
 
-    // works as long as microsec != 0
-    // find another class method
     @org.python.Method(
-            __doc__ = "Instance method - time"
+        __doc__ = "Returns an int corresponding to what day of the week a date occurs (monday-sunday:0-6)",
+        default_args = {}
     )
-    public LocalTime time(){
-    LocalTime time = LocalTime.of((int)this.hour.value, (int)this.minute.value, (int)this.second.value, (int)this.microsecond.value);
-    return time;
-
-    /*
-    LocalTime time = LocalTime.of((int)this.hour.value, (int)this.minute.value, (int)this.second.value, (int)this.microsecond.value);
-    String timeStr = time.toString();
-    if (this.microsecond.value == 0){
-      timeStr = timeStr + ":00"
-    }
-    return timeStr;
-    */
+    public org.python.types.Int weekday(){
+      LocalDate date = LocalDate.of((int)this.year.value, (int)this.month.value, (int)this.day.value);
+      int DayOfWeek = date.getDayOfWeek().getValue();
+      return Int.getInt(DayOfWeek - 1);
     }
 
+    // Update this when date()- group are done.
     @org.python.Method(
-            __doc__ = "Instance method - date"
+            __doc__ = "Returns a date object from the attributes of a datetime object",
+            default_args = {}
     )
     public LocalDate date(){
     LocalDate date = LocalDate.of((int)this.year.value, (int)this.month.value, (int)this.day.value);
