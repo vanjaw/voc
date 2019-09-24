@@ -6,11 +6,30 @@ from .. utils import TranspileTestCase, NotImplementedToExpectedFailure
 
 
 class DatetimeTests(TranspileTestCase, NotImplementedToExpectedFailure):
+
+    def test_min_max(self):
+        self.assertCodeExecution("""
+            from datetime import date
+            test = date(6,6,6)
+            print(test.min)
+            print(test.max)
+
+        """)
+
     def test_date(self):
         self.assertCodeExecution("""
             from datetime import date
             test = date(1994,12,8)
+            print(test.year)
+            print(test.month)
+            print(test.day)
             print(test)
+
+            test2 = date(1889,4,20)
+            print(test2.year)
+            print(test2.month)
+            print(test2.day)
+            print(test2)
         """)
 
     def test_date_no_input(self):
@@ -58,17 +77,11 @@ class DatetimeTests(TranspileTestCase, NotImplementedToExpectedFailure):
     def test_date_wrong_type(self):
         self.assertCodeExecution("""
             from datetime import date
+
             try:
                 test = date(1994,12,"Hej")
             except TypeError as e:
                 print(e)
-        """)
-
-    def test_date_today(self):
-        self.assertCodeExecution("""
-            from datetime import date
-            test = date.today()
-            print(test)
         """)
 
     def test_date_year_value(self):
@@ -154,3 +167,24 @@ class DatetimeTests(TranspileTestCase, NotImplementedToExpectedFailure):
             except ValueError as e:
                 print(e)
        """)
+
+    def test_date_today(self):
+        self.assertCodeExecution("""
+            from datetime import date
+            test = date.today()
+            print(test)
+
+            print(test.year)
+            print(test.month)
+            print(test.day)
+        """)
+
+
+    def test_date_weekday(self):
+        self.assertCodeExecution("""
+            from datetime import date
+            test = date(2019,9,23)
+            print(test)
+            print(test.weekday())
+
+        """)
