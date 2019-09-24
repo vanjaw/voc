@@ -79,28 +79,28 @@ public class datetime extends org.python.types.Object {
 
 
       if (args.length > 0) {
-                  validateInput("year", (org.python.types.Int) args[0], MIN_YEAR, MAX_YEAR);
+                  validateInput("year", args[0], MIN_YEAR, MAX_YEAR);
                   yearDefault = (org.python.types.Int) args[0];
                   if (args.length > 1) {
-                      validateInput("month", (org.python.types.Int) args[1], MIN_MONTH, MAX_MONTH);
+                      validateInput("month", args[1], MIN_MONTH, MAX_MONTH);
                       monthDefault = (org.python.types.Int) args[1];
                       if (args.length > 2) {
-                          validateInput("day", (org.python.types.Int) args[2], MIN_DAY, MAX_DAY);
+                          validateInput("day", args[2], MIN_DAY, MAX_DAY);
                           dayDefault = (org.python.types.Int) args[2];
                           if (args.length > 3) {
-                              validateInput("hour", (org.python.types.Int) args[3], MIN_HOUR, MAX_HOUR);
+                              validateInput("hour", args[3], MIN_HOUR, MAX_HOUR);
                               hourDefault = (org.python.types.Int) args[3];
                               if (args.length > 4) {
-                                  validateInput("minute", (org.python.types.Int) args[4], MIN_MINUTE, MAX_MINUTE);
+                                  validateInput("minute", args[4], MIN_MINUTE, MAX_MINUTE);
                                   minuteDefault = (org.python.types.Int) args[4];
                                   if (args.length > 5) {
-                                      validateInput("second", (org.python.types.Int) args[5], MIN_SECOND, MAX_SECOND);
+                                      validateInput("second", args[5], MIN_SECOND, MAX_SECOND);
                                       secondDefault = (org.python.types.Int) args[5];
                                       if (args.length > 6) {
-                                          validateInput("microsecond", (org.python.types.Int) args[6], MIN_MICROSECOND, MAX_MICROSECOND);
+                                          validateInput("microsecond", args[6], MIN_MICROSECOND, MAX_MICROSECOND);
                                           microsecondDefault = (org.python.types.Int) args[6];
                                           if (args.length > 7) {
-                                              if ((org.python.types.NoneType) args[7] == null ) {
+                                              if (args[7] == null ) {
                                                   tzinfoDefault = (org.python.types.NoneType) args[7];
                                               }
                                               else {
@@ -226,13 +226,22 @@ public class datetime extends org.python.types.Object {
             default_args = {"attributeName", "attribute", "minValue", "maxValue"}
     )
 
-    private static void validateInput(String attributeName, org.python.types.Int attribute, org.python.types.Int minValue, org.python.types.Int maxValue){
-        if(attribute instanceof org.python.types.Int){
+    private static void validateInput(String attributeName, org.python.Object attr, org.python.types.Int minValue, org.python.types.Int maxValue){
+        if(attr instanceof org.python.types.Int){
+          org.python.types.Int attribute = (org.python.types.Int) attr;
           if(attribute.value < minValue.value || attribute.value > maxValue.value){
             valueOutOfRange(attributeName, attribute, minValue, maxValue);
           }
         } else{
-            throw new org.python.exceptions.NameError("Name is not defined");
+            if(attr instanceof org.python.types.Float){
+                throw new org.python.exceptions.TypeError("integer argument expected, got float");
+            }
+            else if(attr instanceof org.python.types.Str){
+                throw new org.python.exceptions.TypeError("an integer is required (got type str)");
+            }
+            else{
+                throw new org.python.exceptions.TypeError("an integer is required");
+            }
         }
 
     }
@@ -362,7 +371,6 @@ public class datetime extends org.python.types.Object {
       return Int.getInt(DayOfWeek - 1);
     }
 
-    // Update this when date()- group are done.
     @org.python.Method(
             __doc__ = "Returns a date object from the attributes of a datetime object",
             default_args = {}

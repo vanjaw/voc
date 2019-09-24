@@ -121,60 +121,73 @@ class test_datetime(NotImplementedToExpectedFailure, TranspileTestCase):
         """)
 
     @expectedFailure
-    def test_datetime_args_kwargs_7(self):
+    # Results in "SyntaxError: positional argument follows keyword argument"
+    def test_datetime_args_kwargs_wrong_order(self):
         self.assertCodeExecution("""
             import datetime
-            date = datetime.datetime(year=1996, month=10, day=1, 1)
-            print(date)
+            try:
+                print(datetime.datetime(year=1996, month=10, day=1, 1))
+            except Exception as e:
+                print(e)
         """)
 
     @expectedFailure
-    def test_datetime_args_kwargs_8(self):
+    # Results in "SyntaxError: positional argument follows keyword argument"
+    def test_datetime_args_kwargs_wrong_order_2(self):
         self.assertCodeExecution("""
             import datetime
-            date = datetime.datetime(year=1996, 1, day=1)
-            print(date)
+            try:
+                print(datetime.datetime(year=1996, 1, day=1))
+            except Exception as e:
+                print(e)
         """)
 
     # incorrect types #
-    @expectedFailure
-    def test_datetime_wrong_type_1(self):
+    def test_datetime_wrong_type_String(self):
         self.assertCodeExecution("""
             import datetime
-            date = datetime.datetime("1996", 1, day=1)
-            print(date)
+            try:
+                print(datetime.datetime("1996", 1, day=1))
+            except Exception as e:
+                print(e)
         """)
 
-    @expectedFailure
-    def test_datetime_wrong_type_2(self):
+    def test_datetime_wrong_type_Float(self):
         self.assertCodeExecution("""
             import datetime
-            date = datetime.datetime(x, 1, day=1)
-            print(date)
+            try:
+                print(datetime.datetime(1996.5, 1, day=1))
+            except Exception as e:
+                print(e)
         """)
-
     @expectedFailure
-    def test_datetime_wrong_type_3(self):
+    # Giving Bool as input works for the python library and converts True = 1
+    # and False = 0. We decided to not implement this as it seems like a bug
+    def test_datetime_wrong_type_Bool(self):
         self.assertCodeExecution("""
             import datetime
-            date = datetime.datetime(2001, 1, day=1, hour= x)
-            print(date)
+            try:
+                print(datetime.datetime(True, 10, day=12, hour=False, minute=True))
+            except Exception as e:
+                print(e)
         """)
 
-    @expectedFailure
     def test_datetime_incorrect_date(self):
         self.assertCodeExecution("""
             import datetime
-            date = datetime.datetime(2001, 2, day=29)
-            print(date)
+            try:
+                print(datetime.datetime(2001, 2, day=29))
+            except Exception as e:
+                print(e)
         """)
 
-    @expectedFailure
-    def test_datetime_incorrect_date(self):
+    def test_datetime_incorrect_date2(self):
         self.assertCodeExecution("""
             import datetime
-            date = datetime.datetime(2001, 6, day=31)
-            print(date)
+            try:
+                print(datetime.datetime(2001, 6, day=31))
+            except Exception as e:
+                print(e)
         """)
 
     # Testing for missing mandatory arguments #
@@ -312,7 +325,6 @@ class test_datetime(NotImplementedToExpectedFailure, TranspileTestCase):
             """)
 
     # Testing for class attributes #
-    #@expectedFailure
     def test_datetime_min(self):
         self.assertCodeExecution("""
             import datetime
@@ -329,7 +341,6 @@ class test_datetime(NotImplementedToExpectedFailure, TranspileTestCase):
             """)
 
     # Testing for instance methods #
-    # @expectedFailure
     def test_datetime_weekday(self):
         self.assertCodeExecution("""
             import datetime
@@ -337,7 +348,6 @@ class test_datetime(NotImplementedToExpectedFailure, TranspileTestCase):
             print(date.weekday())
             """)
 
-    #@expectedFailure
     def test_datetime_date(self):
         self.assertCodeExecution("""
             import datetime
