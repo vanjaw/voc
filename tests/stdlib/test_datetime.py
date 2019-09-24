@@ -77,6 +77,106 @@ class test_datetime(NotImplementedToExpectedFailure, TranspileTestCase):
             print(date)
         """)
 
+    # test for combination of args and kwargs #
+    def test_datetime_args_kwargs_1(self):
+        self.assertCodeExecution("""
+            import datetime
+            date = datetime.datetime(1996, month=10, day=1, hour = 3, minute = 4, second = 5, microsecond = 18)
+            print(date)
+        """)
+
+    def test_datetime_args_kwargs_2(self):
+        self.assertCodeExecution("""
+            import datetime
+            date = datetime.datetime(1996, 10, day=1, hour = 3, minute = 4, second = 5, microsecond = 18)
+            print(date)
+        """)
+
+    def test_datetime_args_kwargs_3(self):
+        self.assertCodeExecution("""
+            import datetime
+            date = datetime.datetime(1996, 10, 1, hour = 3, minute = 4, second = 5, microsecond = 18)
+            print(date)
+        """)
+
+    def test_datetime_args_kwargs_4(self):
+        self.assertCodeExecution("""
+            import datetime
+            date = datetime.datetime(1996, 10, 1, 3, minute = 4, second = 5, microsecond = 18)
+            print(date)
+        """)
+
+    def test_datetime_args_kwargs_5(self):
+        self.assertCodeExecution("""
+            import datetime
+            date = datetime.datetime(1996, 10, 1, 3, 4, second = 5, microsecond = 18)
+            print(date)
+        """)
+
+    def test_datetime_args_kwargs_6(self):
+        self.assertCodeExecution("""
+            import datetime
+            date = datetime.datetime(1996, 10, 1, 3, 4, 5, microsecond = 18)
+            print(date)
+        """)
+
+    @expectedFailure
+    def test_datetime_args_kwargs_7(self):
+        self.assertCodeExecution("""
+            import datetime
+            date = datetime.datetime(year=1996, month=10, day=1, 1)
+            print(date)
+        """)
+
+    @expectedFailure
+    def test_datetime_args_kwargs_8(self):
+        self.assertCodeExecution("""
+            import datetime
+            date = datetime.datetime(year=1996, 1, day=1)
+            print(date)
+        """)
+
+    # incorrect types #
+    @expectedFailure
+    def test_datetime_wrong_type_1(self):
+        self.assertCodeExecution("""
+            import datetime
+            date = datetime.datetime("1996", 1, day=1)
+            print(date)
+        """)
+
+    @expectedFailure
+    def test_datetime_wrong_type_2(self):
+        self.assertCodeExecution("""
+            import datetime
+            date = datetime.datetime(x, 1, day=1)
+            print(date)
+        """)
+
+    @expectedFailure
+    def test_datetime_wrong_type_3(self):
+        self.assertCodeExecution("""
+            import datetime
+            date = datetime.datetime(2001, 1, day=1, hour= x)
+            print(date)
+        """)
+
+    @expectedFailure
+    def test_datetime_incorrect_date(self):
+        self.assertCodeExecution("""
+            import datetime
+            date = datetime.datetime(2001, 2, day=29)
+            print(date)
+        """)
+
+    @expectedFailure
+    def test_datetime_incorrect_date(self):
+        self.assertCodeExecution("""
+            import datetime
+            date = datetime.datetime(2001, 6, day=31)
+            print(date)
+        """)
+
     # Testing for missing mandatory arguments #
     def test_datetime_no_year(self):
 	    self.assertCodeExecution("""
