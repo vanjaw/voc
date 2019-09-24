@@ -367,9 +367,11 @@ public class datetime extends org.python.types.Object {
             __doc__ = "Returns a date object from the attributes of a datetime object",
             default_args = {}
     )
-    public LocalDate date(){
-    LocalDate date = LocalDate.of((int)this.year.value, (int)this.month.value, (int)this.day.value);
-    return date;
+    public date date(){
+      int year = (int) this.year.value;
+      int month = (int) this.month.value;
+      int day = (int) this.day.value;
+      return new org.python.stdlib.datetime.date(year,month,day);
     }
 
 }
