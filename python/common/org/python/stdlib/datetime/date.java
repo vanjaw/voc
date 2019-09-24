@@ -73,11 +73,41 @@ public class date extends org.python.types.Object {
         }
 
         /* Testing Valid data*/
-        if (year < 1 || year > 9999) {
+        String yeartemp = "" + year;
+        int testyear = Integer.parseInt(yeartemp);
+        if (testyear < 1 || testyear > 9999) {
             throw new org.python.exceptions.ValueError(
-                "an integer is required (got type " + org.Python.typeName(((org.python.types.Type) day.type()).klass) + ")"
+                "year " + testyear + " is out of range"
             );
+        }
 
+        String monthtemp = "" + month;
+        int testmonth = Integer.parseInt(monthtemp);
+        if (testmonth < 1 || testmonth > 12) {
+            throw new org.python.exceptions.ValueError(
+                "month must be in 1..12"
+            );
+        }
+
+        String daytemp = "" + day;
+        int testday = Integer.parseInt(daytemp);
+        if (testday < 1 || testday > 31) {
+            throw new org.python.exceptions.ValueError(
+                "day is out of range for month"
+            );
+        }
+
+        if (testday == 31 && (testmonth == 4 || testmonth == 6 || testmonth == 9 || testmonth == 11)) {
+            throw new org.python.exceptions.ValueError(
+                "day is out of range for month"
+            );
+        }
+
+        if (testmonth == 2 && (testday > 29 ||
+            (testday == 29 && ((testyear % 4 != 0) || ((testyear % 100 == 0) && (testyear % 400 != 0)))))) {
+            throw new org.python.exceptions.ValueError(
+                "day is out of range for month"
+            );
         }
 
         try {

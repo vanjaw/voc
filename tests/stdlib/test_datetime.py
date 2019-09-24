@@ -70,3 +70,87 @@ class DatetimeTests(TranspileTestCase, NotImplementedToExpectedFailure):
             test = date.today()
             print(test)
         """)
+
+    def test_date_year_value(self):
+        self.assertCodeExecution("""
+            from datetime import date
+            try:
+                test = date(0,1,2)
+            except ValueError as e:
+                print(e)
+
+            try:
+                test = date(150000,1,2)
+            except ValueError as e:
+                print(e)
+        """)
+
+    def test_date_month_value(self):
+        self.assertCodeExecution("""
+            from datetime import date
+            try:
+                test = date(1994,0,2)
+            except ValueError as e:
+                print(e)
+
+            try:
+                test = date(3000,13,2)
+            except ValueError as e:
+                print(e)
+        """)
+
+    def test_date_date_value(self):
+        self.assertCodeExecution("""
+            from datetime import date
+
+            test = date(2020,2,29)
+            print(test)
+            test = date(2000,2,29)
+            print(test)
+ 
+            try:
+                test = date(1994,5,0)
+            except ValueError as e:
+                print(e)
+
+            try:
+                test = date(2000,1,32)
+            except ValueError as e:
+                print(e)
+
+            try:
+                test = date(2000,4,31)
+            except ValueError as e:
+                print(e)
+
+            try:
+                test = date(2000,6,31)
+            except ValueError as e:
+                print(e)
+            
+            try:
+                test = date(2000,9,31)
+            except ValueError as e:
+                print(e)
+            
+            try:
+                test = date(2000,11,31)
+            except ValueError as e:
+                print(e)
+
+            # Leap year shenanigans
+            try:
+                test = date(2020,2,30)
+            except ValueError as e:
+                print(e)
+
+            try:
+                test = date(2001,2,29)
+            except ValueError as e:
+                print(e)
+
+            try:
+                test = date(2100,2,29)
+            except ValueError as e:
+                print(e)
+       """)
