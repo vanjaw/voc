@@ -56,4 +56,45 @@
     <delete dir="${build}"/>
     <delete dir="${dist}"/>
   </target>
+
+  <path id="test.classpath">
+   <pathelement path="${build}/tests" />
+   <pathelement path="${build}/java" />
+   <pathelement location="lib/junit-platform-console-standalone-1.5.2.jar" />
+  </path>
+
+  <target name="compile-junit" depends="java">
+    <mkdir dir="${build}/tests" />
+    <javac destdir="${build}/tests" classpathref="test.classpath" includeantruntime="false">
+      <src path="junit/common" />
+    </javac>
+  </target>
+
+  <target name="test.junit.launcher" depends="compile-junit">
+    <junitlauncher haltOnFailure="true" printSummary="true">
+      <classpath refid="test.classpath"/>
+      <testclasses outputdir="build/test-report">
+        <fileset dir="build/tests">
+          <include name="**/*Tests.class"/>
+        </fileset>
+        <listener type="legacy-xml" sendSysOut="true" sendSysErr="true"/>
+        <listener type="legacy-plain" sendSysOut="true" />
+      </testclasses>
+    </junitlauncher>
+  </target>
+
+  <target name="test.console.launcher" depends="compile-junit">
+    <java classpathref="test.classpath" classname="org.junit.platform.console.ConsoleLauncher" fork="true" failonerror="true">
+      <arg value="--scan-classpath"/>
+      <arg line="--reports-dir build/test-report"/>
+    </java>
+    <junitreport todir="build/test-report">
+      <fileset dir="build/test-report">
+        <include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="build/test-report/html"/>
+    </junitreport>
+  </target>
+
+  <target name="junit" depends="test.junit.launcher, test.console.launcher" />
 </project>
