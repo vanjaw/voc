@@ -8,7 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 
 class ListTests {
     @Test
-    @DisplayName("TEST")
+    @DisplayName("List insert")
     void testInsert() {
         org.python.types.List x = new org.python.types.List(
             new java.util.ArrayList(java.util.Arrays.asList(
@@ -43,7 +43,7 @@ class ListTests {
         );
 
         assertEquals(x.__str__().toString(), "[4, 5, 1, 2, 3, 6, 7]");
-	
+    
         x.insert(
             org.python.types.Int.getInt(-1),
             org.python.types.Int.getInt(8)
@@ -82,6 +82,31 @@ class ListTests {
             new org.python.types.Str("hello")
         );
         assertEquals(x.__str__().toString(), "['hello', 1, 2, 3]");
+    }
+    
+    @Test
+    @DisplayName("List insert list")
+    void testInsert3()
+    {
+        org.python.types.List x = new org.python.types.List(
+            new java.util.ArrayList(java.util.Arrays.asList(
+                org.python.types.Int.getInt(1),
+                org.python.types.Int.getInt(2),
+                org.python.types.Int.getInt(3)
+            ))
+        );
+
+        x.insert(
+            org.python.types.Int.getInt(0),
+            new org.python.types.List(
+                new java.util.ArrayList(java.util.Arrays.asList(
+                    org.python.types.Int.getInt(1),
+                    org.python.types.Int.getInt(2)
+                ))
+            )
+        );
+
+        assertEquals(x.__str__().toString(), "[[1, 2], 1, 2, 3]");
     }
 
     @Test
@@ -129,5 +154,5 @@ class ListTests {
         } catch (org.python.exceptions.TypeError e) {
             assertEquals(e.__str__().toString(), "'list' object cannot be interpreted as an integer");
         }
-    }
+    }  
 }
