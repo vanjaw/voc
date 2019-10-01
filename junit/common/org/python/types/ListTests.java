@@ -1,6 +1,7 @@
 package org.python.types;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -81,5 +82,52 @@ class ListTests {
             new org.python.types.Str("hello")
         );
         assertEquals(x.__str__().toString(), "['hello', 1, 2, 3]");
+    }
+
+    @Test
+    @DisplayName("List insert TypeError")
+    void testInsert4()
+    {
+        org.python.types.List x = new org.python.types.List(
+            new java.util.ArrayList(java.util.Arrays.asList(
+                org.python.types.Int.getInt(1),
+                org.python.types.Int.getInt(2),
+                org.python.types.Int.getInt(3)
+            ))
+        );
+
+        try {
+            x.insert(
+                new org.python.types.Str("a"),
+                org.python.types.Int.getInt(4)
+            );
+            fail();
+        } catch (org.python.exceptions.TypeError e) {
+            assertEquals(e.__str__().toString(), "'str' object cannot be interpreted as an integer");
+        }
+
+        x = new org.python.types.List(
+            new java.util.ArrayList(java.util.Arrays.asList(
+                org.python.types.Int.getInt(1),
+                org.python.types.Int.getInt(2),
+                org.python.types.Int.getInt(3)
+            ))
+        );
+
+        try {
+            x.insert(
+                new org.python.types.List(
+                    new java.util.ArrayList(java.util.Arrays.asList(
+                        org.python.types.Int.getInt(1),
+                        org.python.types.Int.getInt(2),
+                        org.python.types.Int.getInt(3)
+                    ))
+                ),
+                org.python.types.Int.getInt(4)
+            );
+            fail();
+        } catch (org.python.exceptions.TypeError e) {
+            assertEquals(e.__str__().toString(), "'list' object cannot be interpreted as an integer");
+        }
     }
 }
