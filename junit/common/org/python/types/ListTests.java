@@ -547,4 +547,85 @@ class ListTests {
             "False"
         );
     }
+
+    @Test
+    @DisplayName("List eq reflected")
+    void testEqReflected()
+    {
+        org.python.types.Object x = new org.python.types.Object()
+        {
+            public org.python.Object __eq__(org.python.Object other)
+            {
+                return org.python.types.Bool.getBool(true);
+            }
+        };
+
+        org.python.types.Object y = new org.python.types.Object()
+        {
+            public org.python.Object __eq__(org.python.Object other)
+            {
+                return org.python.types.Bool.getBool(false);
+            }
+        };
+
+        assertEquals(
+            new org.python.types.List(
+                new java.util.ArrayList(java.util.Arrays.asList(
+                    x
+                ))
+            ).__eq__(
+                new org.python.types.List(
+                    new java.util.ArrayList(java.util.Arrays.asList(
+                        x
+                    ))
+                )
+            ).__str__().toString(),
+            "True"
+        );
+
+        assertEquals(
+            new org.python.types.List(
+                new java.util.ArrayList(java.util.Arrays.asList(
+                    x, x
+                ))
+            ).__eq__(
+                new org.python.types.List(
+                    new java.util.ArrayList(java.util.Arrays.asList(
+                        x
+                    ))
+                )
+            ).__str__().toString(),
+            "False"
+        );
+
+        assertEquals(
+            new org.python.types.List(
+                new java.util.ArrayList(java.util.Arrays.asList(
+                    x
+                ))
+            ).__eq__(
+                new org.python.types.List(
+                    new java.util.ArrayList(java.util.Arrays.asList(
+                        y
+                    ))
+                )
+            ).__str__().toString(),
+            "True"
+        );
+
+        assertEquals(
+            new org.python.types.List(
+                new java.util.ArrayList(java.util.Arrays.asList(
+                    y
+                ))
+            ).__eq__(
+                new org.python.types.List(
+                    new java.util.ArrayList(java.util.Arrays.asList(
+                        x
+                    ))
+                )
+            ).__str__().toString(),
+            "False"
+        );
+    }
 }
