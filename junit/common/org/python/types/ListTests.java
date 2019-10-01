@@ -449,4 +449,102 @@ class ListTests {
             "False"
         );
     }
+
+    @Test
+    @DisplayName("List ge reflected")
+    void testGeReflected()
+    {
+        org.python.types.Object x = new org.python.types.Object()
+        {
+            public org.python.Object __le__(org.python.Object other)
+            {
+                return org.python.types.Bool.getBool(true);
+            }
+        };
+
+        org.python.types.Object y = new org.python.types.Object()
+        {
+            public org.python.Object __le__(org.python.Object other)
+            {
+                return org.python.types.Bool.getBool(true);
+            }
+        };
+
+        assertEquals(x.__ge__(x).__str__().toString(), "NotImplemented");
+
+        assertEquals(
+            new org.python.types.List(
+                new java.util.ArrayList(java.util.Arrays.asList(
+                    x
+                ))
+            ).__ge__(
+                new org.python.types.List(
+                    new java.util.ArrayList(java.util.Arrays.asList(
+                        x
+                    ))
+                )
+            ).__str__().toString(),
+            "True"
+        );
+
+        assertEquals(
+            new org.python.types.List(
+                new java.util.ArrayList(java.util.Arrays.asList(
+                    x
+                ))
+            ).__ge__(
+                new org.python.types.List(
+                    new java.util.ArrayList(java.util.Arrays.asList(
+                        y
+                    ))
+                )
+            ).__str__().toString(),
+            "True"
+        );
+
+        assertEquals(
+            new org.python.types.List(
+                new java.util.ArrayList(java.util.Arrays.asList(
+                    x, y
+                ))
+            ).__ge__(
+                new org.python.types.List(
+                    new java.util.ArrayList(java.util.Arrays.asList(
+                        y
+                    ))
+                )
+            ).__str__().toString(),
+            "True"
+        );
+
+        assertEquals(
+            new org.python.types.List(
+                new java.util.ArrayList(java.util.Arrays.asList(
+                    x, y
+                ))
+            ).__ge__(
+                new org.python.types.List(
+                    new java.util.ArrayList(java.util.Arrays.asList(
+                        x
+                    ))
+                )
+            ).__str__().toString(),
+            "True"
+        );
+
+        assertEquals(
+            new org.python.types.List(
+                new java.util.ArrayList(java.util.Arrays.asList(
+                    x
+                ))
+            ).__ge__(
+                new org.python.types.List(
+                    new java.util.ArrayList(java.util.Arrays.asList(
+                        x, y
+                    ))
+                )
+            ).__str__().toString(),
+            "False"
+        );
+    }
 }
