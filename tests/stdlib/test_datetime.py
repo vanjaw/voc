@@ -33,6 +33,13 @@ class test_datetime(NotImplementedToExpectedFailure, TranspileTestCase):
     #         print(e)      
     #     """)
 
+    def test_constructor_error(self):
+        self.assertCodeExecution("""
+        import datetime
+        print(datetime.timedelta(1,days=1)
+        print(datetime.timedelta(a=1)
+        """)
+
     # def test_operation_addition(self):
     #     self.assertCodeExecution("""
     #     import datetime
