@@ -686,4 +686,29 @@ class ListTests {
             "True"
         );
     }
+
+    @Test
+    @DisplayName("List too many arguments")
+    void testTooManyArguments()
+    {
+        try
+        {
+            new org.python.types.List(
+                new org.python.Object[] {
+                    org.python.types.Int.getInt(1),
+                    org.python.types.Int.getInt(2),
+                    org.python.types.Int.getInt(3)
+                },
+                new java.util.HashMap()
+            );
+            fail();
+        }
+        catch (org.python.exceptions.TypeError err)
+        {
+            assertEquals(
+                err.__str__().toString(),
+                "list() takes at most 1 argument (3 given)"
+            );
+        }
+    }
 }
