@@ -628,4 +628,62 @@ class ListTests {
             "False"
         );
     }
+
+    @Test
+    @DisplayName("List reversed")
+    void testReversed()
+    {
+        org.python.types.List list = new org.python.types.List(
+            new java.util.ArrayList(java.util.Arrays.asList(
+                org.python.types.Int.getInt(123),
+                new org.python.types.Str("xyz"),
+                new org.python.types.Str("abc")
+            ))
+        );
+
+        org.python.types.List reversedList = new org.python.types.List(
+            new java.util.ArrayList(java.util.Arrays.asList(
+                new org.python.types.Str("abc"),
+                new org.python.types.Str("xyz"),
+                org.python.types.Int.getInt(123)
+            ))
+        );
+
+        org.python.types.List l = new org.python.types.List(
+            new java.util.ArrayList()
+        );
+
+        org.python.Object reverse = list.__reversed__();
+
+        try
+        {
+            while (true)
+            {
+                l.append(org.Python.next(
+                    reverse,
+                    null
+                ));
+            }
+        }
+        catch (org.python.exceptions.StopIteration e)
+        {
+            assertEquals(
+                l.__eq__(reversedList).__str__().toString(),
+                "True"
+            );
+        }
+
+        org.python.types.List origList = new org.python.types.List(
+            new java.util.ArrayList(java.util.Arrays.asList(
+                org.python.types.Int.getInt(123),
+                new org.python.types.Str("xyz"),
+                new org.python.types.Str("abc")
+            ))
+        );
+
+        assertEquals(
+            list.__eq__(origList).__str__().toString(),
+            "True"
+        );
+    }
 }
