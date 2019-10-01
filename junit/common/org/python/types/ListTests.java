@@ -43,7 +43,7 @@ class ListTests {
         );
 
         assertEquals(x.__str__().toString(), "[4, 5, 1, 2, 3, 6, 7]");
-    
+
         x.insert(
             org.python.types.Int.getInt(-1),
             org.python.types.Int.getInt(8)
@@ -83,7 +83,7 @@ class ListTests {
         );
         assertEquals(x.__str__().toString(), "['hello', 1, 2, 3]");
     }
-    
+
     @Test
     @DisplayName("List insert list")
     void testInsert3()
@@ -711,4 +711,166 @@ class ListTests {
             );
         }
     }
+
+    @Test
+    @DisplayName("List slice")
+    void testSlice()
+    {
+      org.python.types.List x = new org.python.types.List(
+      new java.util.ArrayList(java.util.Arrays.asList(
+          org.python.types.Int.getInt(1),
+          org.python.types.Int.getInt(2),
+          org.python.types.Int.getInt(3),
+          org.python.types.Int.getInt(4),
+          org.python.types.Int.getInt(5)
+      ))
+      );
+      // Full slice
+      org.python.Object s1 = new Slice(null);
+      org.python.Object s1List = x.__getitem__(s1);
+      assertEquals(s1List.__str__().toString(), "[1, 2, 3, 4, 5]");
+
+      // Left bound slice
+      org.python.Object s2 = new Slice(Int.getInt(1), Int.getInt(5));
+      org.python.Object s2List = x.__getitem__(s2);
+      assertEquals(s2List.__str__().toString(), "[2, 3, 4, 5]");
+
+      // Right bound slice
+      org.python.Object s3 = new Slice(Int.getInt(0), Int.getInt(4));
+      org.python.Object s3List = x.__getitem__(s3);
+      assertEquals(s3List.__str__().toString(), "[1, 2, 3, 4]");
+
+      // Slice bound in both directions
+      org.python.Object s4 = new Slice(Int.getInt(1), Int.getInt(4));
+      org.python.Object s4List = x.__getitem__(s4);
+      assertEquals(s4List.__str__().toString(), "[2, 3, 4]");
+
+      // Slice bound in both directions with end out of bounds
+      org.python.Object s5 = new Slice(Int.getInt(1), Int.getInt(6));
+      org.python.Object s5List = x.__getitem__(s5);
+      assertEquals(s5List.__str__().toString(), "[2, 3, 4, 5]");
+
+      // Slice bound in both directions with start out of bounds
+      org.python.Object s6 = new Slice(Int.getInt(6), Int.getInt(7));
+      org.python.Object s6List = x.__getitem__(s6);
+      assertEquals(s6List.__str__().toString(), "[]");
+    }
+
+    @Test
+    @DisplayName("List slice with zero steps")
+    void testSliceZeroSteps()
+    {
+      org.python.types.List x = new org.python.types.List(
+      new java.util.ArrayList(java.util.Arrays.asList(
+          org.python.types.Int.getInt(1),
+          org.python.types.Int.getInt(2),
+          org.python.types.Int.getInt(3),
+          org.python.types.Int.getInt(4),
+          org.python.types.Int.getInt(5)
+      ))
+      );
+      // When step is 0
+      org.python.Object s1 = new Slice(Int.getInt(1), Int.getInt(3), Int.getInt(0));
+      try {
+            org.python.Object s1List = x.__getitem__(s1);
+            fail();
+        }
+        catch(org.python.exceptions.ValueError e) {
+            assertEquals(e.__str__().toString(), "slice step cannot be zero");
+        }
+    }
+
+    @Test
+    @DisplayName("List slice in reverse")
+    void testSliceInReverse()
+    {
+      org.python.types.List x = new org.python.types.List(
+      new java.util.ArrayList(java.util.Arrays.asList(
+          org.python.types.Int.getInt(1),
+          org.python.types.Int.getInt(2),
+          org.python.types.Int.getInt(3),
+          org.python.types.Int.getInt(4),
+          org.python.types.Int.getInt(5)
+      ))
+      );
+      // Left bound slice with a negative step
+      org.python.Object s2 = new Slice(Int.getInt(4), Int.getInt(0), Int.getInt(-1));
+      org.python.Object s2List = x.__getitem__(s2);
+      assertEquals(s2List.__str__().toString(), "[5, 4, 3, 2]");
+
+      // Right bound slice with a negative step
+      org.python.Object s3 = new Slice(Int.getInt(3), Int.getInt(1), Int.getInt(-2));
+      org.python.Object s3List = x.__getitem__(s3);
+      assertEquals(s3List.__str__().toString(), "[4]");
+
+      // Right bound and left bound slice with a negative step
+      org.python.Object s4 = new Slice(Int.getInt(4), Int.getInt(1), Int.getInt(-1));
+      org.python.Object s4List = x.__getitem__(s4);
+      assertEquals(s4List.__str__().toString(), "[5, 4, 3]");
+    }
+
+    @Test
+    @DisplayName("List count")
+    void testCount()
+    {
+      // Normal count
+      org.python.types.List x = new org.python.types.List(
+      new java.util.ArrayList(java.util.Arrays.asList(
+          org.python.types.Int.getInt(1),
+          org.python.types.Int.getInt(1),
+          org.python.types.Int.getInt(1),
+          org.python.types.Int.getInt(4),
+          org.python.types.Int.getInt(5)
+      ))
+      );
+      assertEquals(x.count(Int.getInt(1)).toString(), "3");
+
+      // Bool count
+      org.python.types.List x2 = new org.python.types.List(
+      new java.util.ArrayList(java.util.Arrays.asList(
+          org.python.types.Int.getInt(1),
+          org.python.types.Int.getInt(1),
+          org.python.types.Bool.getBool(true),
+          org.python.types.Bool.getBool(false),
+          org.python.types.Int.getInt(2),
+          org.python.types.Bool.getBool(true)
+      ))
+      );
+      assertEquals(x2.count(Int.getInt(1)).toString(), "4");
+
+      // Element doesn't exist count
+      assertEquals(x2.count(Int.getInt(3)).toString(), "0");
+    }
+
+    @Test
+    @DisplayName("List contains")
+    void testContains()
+    {
+      org.python.types.List x = new org.python.types.List(
+      new java.util.ArrayList(java.util.Arrays.asList(
+          org.python.types.Int.getInt(1),
+          org.python.types.Int.getInt(2),
+          org.python.types.Int.getInt(3),
+          org.python.types.Int.getInt(4),
+          org.python.types.Int.getInt(5)
+      ))
+      );
+      // Normal contains
+      assertEquals(x.__contains__(Int.getInt(1)).toString(), "True");
+
+      // Element doesn't exist
+      assertEquals(x.__contains__(Int.getInt(0)).toString(), "False");
+
+      // Checking for booleans
+      org.python.types.List x2 = new org.python.types.List(
+      new java.util.ArrayList(java.util.Arrays.asList(
+          org.python.types.Bool.getBool(true),
+          org.python.types.Bool.getBool(false)
+      ))
+      );
+      assertEquals(x2.__contains__(Int.getInt(0)).toString(), "True");
+      assertEquals(x2.__contains__(Int.getInt(1)).toString(), "True");
+    }
+
+
 }
