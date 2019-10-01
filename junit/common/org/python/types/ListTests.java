@@ -154,5 +154,103 @@ class ListTests {
         } catch (org.python.exceptions.TypeError e) {
             assertEquals(e.__str__().toString(), "'list' object cannot be interpreted as an integer");
         }
-    }  
+    }
+
+    @Test
+    @DisplayName("List lt reflected")
+    void testLtReflected()
+    {
+        org.python.types.Object x = new org.python.types.Object()
+        {
+            public org.python.Object __gt__(org.python.Object other)
+            {
+                return org.python.types.Bool.getBool(true);
+            }
+        };
+
+        org.python.types.Object y = new org.python.types.Object()
+        {
+            public org.python.Object __gt__(org.python.Object other)
+            {
+                return org.python.types.Bool.getBool(true);
+            }
+        };
+
+        assertEquals(x.__lt__(x).__str__().toString(), "NotImplemented");
+
+        assertEquals(
+            new org.python.types.List(
+                new java.util.ArrayList(java.util.Arrays.asList(
+                    x
+                ))
+            ).__lt__(
+                new org.python.types.List(
+                    new java.util.ArrayList(java.util.Arrays.asList(
+                        x
+                    ))
+                )
+            ).__str__().toString(),
+            "False"
+        );
+
+        assertEquals(
+            new org.python.types.List(
+                new java.util.ArrayList(java.util.Arrays.asList(
+                    x
+                ))
+            ).__lt__(
+                new org.python.types.List(
+                    new java.util.ArrayList(java.util.Arrays.asList(
+                        y
+                    ))
+                )
+            ).__str__().toString(),
+            "True"
+        );
+
+        assertEquals(
+            new org.python.types.List(
+                new java.util.ArrayList(java.util.Arrays.asList(
+                    x, y
+                ))
+            ).__lt__(
+                new org.python.types.List(
+                    new java.util.ArrayList(java.util.Arrays.asList(
+                        y
+                    ))
+                )
+            ).__str__().toString(),
+            "True"
+        );
+
+        assertEquals(
+            new org.python.types.List(
+                new java.util.ArrayList(java.util.Arrays.asList(
+                    x, y
+                ))
+            ).__lt__(
+                new org.python.types.List(
+                    new java.util.ArrayList(java.util.Arrays.asList(
+                        x
+                    ))
+                )
+            ).__str__().toString(),
+            "False"
+        );
+
+        assertEquals(
+            new org.python.types.List(
+                new java.util.ArrayList(java.util.Arrays.asList(
+                    x
+                ))
+            ).__lt__(
+                new org.python.types.List(
+                    new java.util.ArrayList(java.util.Arrays.asList(
+                        x, y
+                    ))
+                )
+            ).__str__().toString(),
+            "True"
+        );
+    }
 }
