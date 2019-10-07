@@ -38,4 +38,4 @@ def test_slice():
     return end - start
 
 if __name__ == '__main__':
-    print("Duration:", test_slice(), "s")
+    print('Duration: {} s'.format(test_slice()))
