@@ -98,4 +98,16 @@
   </target>
 
   <target name="junit" depends="test.junit.launcher, test.console.launcher" />
+
+  <path id="workload.classpath">
+   <pathelement path="${build}/java" />
+   <pathelement location="lib/junit-platform-console-standalone-1.5.2.jar" />
+  </path>
+
+  <target name="compile-workload" depends="java">
+    <mkdir dir="${build}/workload" />
+    <javac destdir="${build}/workload" classpathref="workload.classpath" includeantruntime="false">
+      <src path="workload/java" />
+    </javac>
+  </target>
 </project>
