@@ -1,11 +1,12 @@
 import time
 
 def test_reverse():
-    test_list = list(range(100000000))
+    test_list = list(range(10000000))
 
     start = time.time()
 
-    test_list.reverse()
+    for i in range(100):
+        test_list.reverse()
 
     end = time.time()
 
