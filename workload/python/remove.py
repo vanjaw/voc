@@ -3,15 +3,12 @@ import time
 def test_remove():
     my_list = list()
 
-    for i in range(30000000):
+    for i in range(3000000):
         my_list.append(1)
 
-    my_list.append(2)
-    my_list.append(2)
-
     start = time.time()
-    my_list.remove(2)
-    my_list.remove(2)
+    for i in range(500):
+        my_list.remove(1)
     finish = time.time()
     return (finish-start)
 
