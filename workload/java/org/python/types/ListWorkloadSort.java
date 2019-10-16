@@ -17,12 +17,12 @@ public class ListWorkloadSort {
           int randint = rand.nextInt(100);
           test_list.append(Int.getInt(randint));
         }
-
+        /*
         long start = System.currentTimeMillis();
         test_list.sort(null,null);
         long finish = System.currentTimeMillis();
         System.out.println("Duration: " + (start-finish));
-
+        */
     }
 }
 
