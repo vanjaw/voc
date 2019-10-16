@@ -8,3 +8,16 @@ The total time for 500.001 removes was 37.653ms where the most time was spent in
 As the most time spent was in the remove part of the code, implementing a datatype with better preformance there might be a good idea and the compare part isn't as important. If we compare the remove operator between ArrayList and LinkedList we can see that (, at least for our test), LinkedList is better with an complexity of O(1) instead of O(n) that ArrayList has.
 ### Our new results
 TBA
+
+## Slice
+
+### Times
+
+![Profile for original implementation](ProfilerSlice.png)
+...
+
+### Alternate implementation
+...
+
+### Results
+...
