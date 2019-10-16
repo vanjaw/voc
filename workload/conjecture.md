@@ -10,20 +10,33 @@ As the most time spent was in the remove part of the code, implementing a dataty
 ![Profiler for Updated](ProfilerRemoveUpdated.png)
 After testing the LinkedList the times drastically worsened, the time increased five times, meaning that the switch to LinkedList was not the right choice for us.
 
+
 ## Slice
+The workload for slice tests for head truncation, tail truncation, head and tail truncation, reversed head truncation, reversed tail truncation, slice given a step size and finally reversed step size slice. 
+
+### 
+Testing the python implentation of the workload gave an average of after 0.722780s 10 test runs.
+
+Testing the java implementation of the workload gave an average of 2.917000s after 10 test runs. 
 
 ### Times
 
+Using a profiler, the following image highlights where most time is spent: 
+
 ![Profile for original implementation](ProfilerSlice.png)
-...
+
+The total time spent was 57.713ms. The addition of elements took most of the time, otherwise we see that returning elements at a specified position and time spent in self, i.e., , consumed the most time. 
 
 ### Alternate implementation
-...
+
+The current implementation builds a new list for every operation. To enhance performance, a proposed alternative implementation would be to add start, stop and step as fields in the list class. By directly assigning start, stop and step values, when a slice is performed, you would essentially be making a copy of values directly rather than building a new list. 
 
 ### Results
-...
+
+The results are shown in the image below: 
 
 
+As seen from the results... 
 
 
 ## Sort (proposal)
