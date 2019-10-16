@@ -15,7 +15,7 @@ After testing the LinkedList the times drastically worsened, the time increased 
 The workload for slice tests for head truncation, tail truncation, head and tail truncation, reversed head truncation, reversed tail truncation, slice given a step size and finally reversed step size slice. 
 
 ### 
-Testing the python implentation of the workload gave an average of after 0.722780s 10 test runs.
+Testing the python implentation of the workload gave an average of 0.722780s after 10 test runs.
 
 Testing the java implementation of the workload gave an average of 2.917000s after 10 test runs. 
 
