@@ -5,7 +5,8 @@ public class ListWorkload {
         Workload[] workloads = {
             new ListWorkloadSort(),
             new ListWorkloadSlice(),
-            new ListWorkloadReverse()
+            new ListWorkloadReverse(),
+            new ListWorkloadRemove()
         };
 
         long maxLength = 0;
