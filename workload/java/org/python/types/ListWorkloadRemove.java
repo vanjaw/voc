@@ -7,22 +7,23 @@ public class ListWorkloadRemove {
       org.python.types.List x = new org.python.types.List(
                 new java.util.ArrayList()
             );
+
+      // Add ints to list
       for(int i=1;i<=500000;i++){
           x.append(org.python.types.Int.getInt(1));
       };
+
+      // Try to find int that doesn't exist
       try{
         x.remove(org.python.types.Int.getInt(2));
       }
       catch(org.python.exceptions.ValueError e){
         ;
-
       }
-      //long starttime = System.nanoTime();
+
+      // Remove all ints in list one by one
       for(int i=1;i<=500000;i++){
           x.remove(org.python.types.Int.getInt(1));
       };
-
-      //long endtime = System.nanoTime();
-      //System.out.println(endtime-starttime);
     }
 }
