@@ -10,8 +10,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.HashMap;
 
-public class ListWorkloadSlice {
-    public static void workload() {
+public class ListWorkloadSlice implements ListWorkload.Workload {
+    public String name() {
+        return "slice";
+    }
+
+    public void workload() {
         List testList = new List(
             new Object[] {
                 Python.range(

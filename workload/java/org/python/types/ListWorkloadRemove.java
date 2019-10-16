@@ -2,8 +2,12 @@ package org.python.types;
 
 import org.python.types.List;
 
-public class ListWorkloadRemove {
-    public static void workload() {
+public class ListWorkloadRemove implements ListWorkload.Workload {
+    public String name() {
+        return "remove";
+    }
+
+    public void workload() {
       org.python.types.List x = new org.python.types.List(
                 new java.util.ArrayList()
             );

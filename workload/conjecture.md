@@ -10,3 +10,21 @@ As the most time spent was in the remove part of the code, implementing a dataty
 ![Profiler for Updated](ProfilerRemoveUpdated.png)
 After testing the LinkedList the times drastically worsened, the time increased five times, meaning that the switch to LinkedList was not the right choice for us.
 
+## Slice
+
+### Times
+
+![Profile for original implementation](ProfilerSlice.png)
+...
+
+### Alternate implementation
+...
+
+### Results
+...
+
+
+
+
+## Sort (proposal)
+https://docs.google.com/document/d/1pNwL3n_IthYPKy0fBVM3L3VbA_JCZk1P8WWnoLRhXmE/edit?usp=sharing

@@ -110,4 +110,14 @@
       <src path="workload/java" />
     </javac>
   </target>
+
+  <target name="workload" depends="compile-workload">
+    <java classname="org.python.types.ListWorkload">
+      <classpath>
+       <pathelement path="${build}/java" />
+       <pathelement path="${build}/workload" />
+       <pathelement location="lib/junit-platform-console-standalone-1.5.2.jar" />
+      </classpath>
+    </java>
+  </target>
 </project>

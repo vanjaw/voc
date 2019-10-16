@@ -1,9 +1,31 @@
 package org.python.types;
 
 import org.python.types.List;
+import java.util.Random;
 
-public class ListWorkloadSort {
-    public static void workload() {
+public class ListWorkloadSort implements ListWorkload.Workload {
+    public String name() {
+        return "sort";
+    }
+
+    private static int list_size = 1000000;
+
+    public void workload() {
         // Workload here
+
+        List test_list = new List();
+
+        Random rand = new Random();
+
+        for(int i = 0; i < list_size; i++){
+          int randint = rand.nextInt(100);
+          test_list.append(Int.getInt(randint));
+        }
+        /*
+        long start = System.currentTimeMillis();
+        test_list.sort(null,null);
+        long finish = System.currentTimeMillis();
+        System.out.println("Duration: " + (start-finish));
+        */
     }
 }
