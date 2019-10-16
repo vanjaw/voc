@@ -1,2 +1,1 @@
-java $(xclip -sel clip -o) -classpath build/java -classpath build/workload org.python.types.ListWorkload
-
+java -Xshare:off  $(xclip -sel clip -o) -classpath build/java:build/workload org.python.types.ListWorkload
