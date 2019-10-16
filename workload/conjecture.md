@@ -21,3 +21,10 @@ TBA
 
 ### Results
 ...
+
+
+
+
+## Sort (proposal)
+
+https://docs.google.com/document/d/1pNwL3n_IthYPKy0fBVM3L3VbA_JCZk1P8WWnoLRhXmE/edit?usp=sharing
