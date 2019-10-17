@@ -5,7 +5,6 @@ public class ListWorkload {
         Workload[] workloads = {
             new ListWorkloadSort(),
             new ListWorkloadSlice(),
-            new ListWorkloadReverse(),
             new ListWorkloadRemove()
         };
 
