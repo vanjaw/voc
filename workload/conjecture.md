@@ -1,6 +1,5 @@
 # Conjectures
 
-## Remove TODO: fixa bilder från samma dator
 ### The times
 ![Profiler for original](ProfilerRemoveArrayList.png)
 The the workload was two steps, first adding 50.000 numbers and then removing them one by one from the first index. The second step was adding 50.000 new numbers and the removing them in the reverse order i.e. from the last index. The time we got was around 1.192 seconds for our remove operations, where in the List implementation around 500ms was using the ArrayList.remove, 400ms using the cmp and 200ms was selftime. 
