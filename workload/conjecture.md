@@ -2,13 +2,15 @@
 
 ## Remove TODO: fixa bilder från samma dator
 ### The times
-![Profiler for original](ProfilerRemove.png)
-The total time for 500.001 removes was 37.653ms where the most time was spent in self time, i.e the actual removal of items from the list. We tested removing the first element of the list 500.000 times and removing an item that didn't exist one time thus looking through the 500.000 elements 1 time.
+![Profiler for original](ProfilerRemoveArrayList.png)
+The the workload was two steps, first adding 50.000 numbers and then removing them one by one from the first index. The second step was adding 50.000 new numbers and the removing them in the reverse order i.e. from the last index. The time we got was around 1.192 seconds for our remove operations, where in the List implementation around 500ms was using the ArrayList.remove, 400ms using the cmp and 200ms was selftime. 
+
 ### What to improve
-As the most time spent was in the remove part of the code, implementing a datatype with better preformance there might be a good idea and the compare part isn't as important. If we compare the remove operator between ArrayList and LinkedList we can see that (, at least for our test), LinkedList is better with an complexity of O(1) instead of O(n) that ArrayList has.
+The most time was spent just removing the elements from the list. Since we cant change the datatypes, the compare have to stay. If we look at different List types, ArrayList has a `O(n)` for removes in the list except for remvoing the last element where it is `O(1)`. LinkedList also has a `O(n)` complexity for removing in the list, however removing first OR last element from the list results in a `O(1)` complexity. Since removing the first element is a common operation it might be worth changing to.
+
 ### Our new results
-![Profiler for Updated](ProfilerRemoveUpdated.png)
-After testing the LinkedList the times drastically worsened, the time increased five times, meaning that the switch to LinkedList was not the right choice for us.
+![Profiler for Updated](ProfilerRemoveLinkedList.png)
+After changing the List type we got a slight improvement, going down to ~950ms. The improvement was in the remove (compare and self-time staying the same), going from ~500ms to ~250ms cutting the times in half.  
 
 
 ## Slice

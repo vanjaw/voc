@@ -9,25 +9,27 @@ public class ListWorkloadRemove implements ListWorkload.Workload {
 
     public void workload() {
       org.python.types.List x = new org.python.types.List(
-                new java.util.ArrayList()
+                new java.util.LinkedList()
             );
 
       // Add ints to list
-      for(int i=1;i<=500000;i++){
-          x.append(org.python.types.Int.getInt(1));
+      for(int i=1;i<=50000;i++){
+          x.append(org.python.types.Int.getInt(i));
       };
 
-      // Try to find int that doesn't exist
-      try{
-        x.remove(org.python.types.Int.getInt(2));
-      }
-      catch(org.python.exceptions.ValueError e){
-        ;
-      }
+      // Remove all ints in list one by one in order
+      for(int i=1;i<=50000;i++){
+          x.remove(org.python.types.Int.getInt(i));
+      };
 
-      // Remove all ints in list one by one
-      for(int i=1;i<=500000;i++){
-          x.remove(org.python.types.Int.getInt(1));
+      // Add ints to list
+      for(int i=1;i<=50000;i++){
+          x.append(org.python.types.Int.getInt(i));
+      };
+
+      // Remove all ints in list one by one in reverse-order
+      for(int i=1;i<=50000;i++){
+          x.append(org.python.types.Int.getInt(50001-i));
       };
     }
 }
