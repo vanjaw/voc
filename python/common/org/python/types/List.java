@@ -7,6 +7,9 @@ import java.util.Comparator;
 
 public class List extends org.python.types.Object {
     public java.util.List<org.python.Object> value;
+    public long start;
+    public long step;
+    public long stop;
 
     public java.lang.Object toJava() {
         return this.value;
@@ -29,11 +32,25 @@ public class List extends org.python.types.Object {
     public List() {
         super();
         this.value = new java.util.ArrayList<org.python.Object>();
+        this.start = -1;
+        this.step = 1;
+        this.stop = -1;
     }
 
     public List(java.util.List<org.python.Object> list) {
         super();
         this.value = list;
+        this.start = -1;
+        this.step = 1;
+        this.stop = -1;
+    }
+
+    public List(java.util.List<org.python.Object> list, long start, long step, long stop) {
+        super();
+        this.value = list;
+        this.start = start;
+        this.step = step;
+        this.stop = stop;
     }
 
     @org.python.Method(
@@ -75,6 +92,9 @@ public class List extends org.python.types.Object {
         } else {
             throw new org.python.exceptions.TypeError("list expected at most 1 arguments, got " + args.length);
         }
+        this.start = -1;
+        this.step = 1;
+        this.stop = -1;
     }
 
     // public org.python.Object __new__() {
@@ -318,6 +338,49 @@ public class List extends org.python.types.Object {
         return org.python.types.Int.getInt(this.value.size());
     }
 
+    private long getStart() {
+        if (this.start == -1) {
+            return 0;
+        } else {
+            return this.start;
+        }
+    }
+
+    private long getStop() {
+        if (this.stop == -1) {
+            return this.value.size();
+        } else {
+            return this.stop;
+        }
+    }
+
+    private long length() {
+        return Math.abs(this.getStop() - this.getStart()) / step;
+    }
+
+    private int getRealIndex(int index) {
+        if (index < 0) {
+            index = (int) (this.length() + index);
+        }
+        return (int) (this.getStart() + this.step * index);
+    }
+
+    private void cloneValues() {
+        if (this.start != -1 || this.stop != -1) {
+            java.util.List newValue = new java.util.ArrayList((int) this.length());
+
+            if (this.start < this.stop) {
+                for (int i = (int) this.start; i < this.stop; i += this.step) {
+                    newValue.add(this.value.get(i));
+                }
+            } else {
+                for (int i = (int) this.start; i > this.stop; i += this.step) {
+                    newValue.add(this.value.get(i));
+                }
+            }
+        }
+    }
+
     @org.python.Method(
             __doc__ = "x.__getitem__(y) <==> x[y]",
             args = {"index"}
@@ -326,10 +389,14 @@ public class List extends org.python.types.Object {
         try {
             if (index instanceof org.python.types.Slice) {
                 org.python.types.Slice.ValidatedValue slice = ((org.python.types.Slice) index).validateValueTypes();
-                java.util.List<org.python.Object> sliced = new java.util.ArrayList<org.python.Object>();
 
                 if (slice.start == null && slice.stop == null && slice.step == null) {
-                    sliced.addAll(this.value);
+                    return new List(
+                        this.value,
+                        this.getStart(),
+                        this.step,
+                        this.getStop()
+                    );
                 } else {
                     long step;
                     if (slice.step != null) {
@@ -338,59 +405,104 @@ public class List extends org.python.types.Object {
                         step = 1;
                     }
 
-                    if (step < 0) {
-                        long start;
-                        if (slice.start != null) {
-                            if (slice.start.value < 0) {
-                                start = Math.max((this.value.size() + slice.start.value), -1);
-                            } else {
-                                start = Math.min(slice.start.value, this.value.size() - 1);
-                            }
+                    long start;
+                    if (slice.start != null) {
+                        if (slice.start.value < 0) {
+                            start = Math.max((this.length() + slice.start.value), 0);
                         } else {
-                            start = this.value.size() - 1;
-                        }
-
-                        long stop;
-                        if (slice.stop != null) {
-                            if (slice.stop.value < 0) {
-                                stop = Math.max((this.value.size() + slice.stop.value), 0);
-                            } else {
-                                stop = Math.min(slice.stop.value, this.value.size());
-                            }
-                        } else {
-                            stop = -1;
-                        }
-                        for (long i = start; i > stop; i += step) {
-                            sliced.add(this.value.get((int) i));
+                            start = Math.min(slice.start.value, this.length());
                         }
                     } else {
-                        long start;
-                        if (slice.start != null) {
-                            if (slice.start.value < 0) {
-                                start = Math.max((this.value.size() + slice.start.value), 0);
-                            } else {
-                                start = Math.min(slice.start.value, this.value.size());
-                            }
-                        } else {
-                            start = 0;
-                        }
-
-                        long stop;
-                        if (slice.stop != null) {
-                            if (slice.stop.value < 0) {
-                                stop = Math.max((this.value.size() + slice.stop.value), 0);
-                            } else {
-                                stop = Math.min(slice.stop.value, this.value.size());
-                            }
-                        } else {
-                            stop = this.value.size();
-                        }
-                        for (long i = start; i < stop; i += step) {
-                            sliced.add(this.value.get((int) i));
-                        }
+                        start = 0;
                     }
+
+                    long stop;
+                    if (slice.stop != null) {
+                        if (slice.stop.value < 0) {
+                            stop = Math.max((this.length() + slice.stop.value), 0);
+                        } else {
+                            stop = Math.min(slice.stop.value, this.length());
+                        }
+                    } else {
+                        stop = this.length();
+                    }
+
+                    return new List(
+                        this.value,
+                        start,
+                        this.step * step,
+                        stop
+                    );
                 }
-                return new org.python.types.List(sliced);
+
+                // java.util.List<org.python.Object> sliced;
+
+                // if (slice.start == null && slice.stop == null && slice.step == null) {
+                //     sliced = new java.util.ArrayList<org.python.Object>(this.value.size());
+                //     sliced.addAll(this.value);
+                // } else {
+                //     long step;
+                //     if (slice.step != null) {
+                //         step = slice.step.value;
+                //     } else {
+                //         step = 1;
+                //     }
+
+                //     if (step < 0) {
+                //         long start;
+                //         if (slice.start != null) {
+                //             if (slice.start.value < 0) {
+                //                 start = Math.max((this.value.size() + slice.start.value), -1);
+                //             } else {
+                //                 start = Math.min(slice.start.value, this.value.size() - 1);
+                //             }
+                //         } else {
+                //             start = this.value.size() - 1;
+                //         }
+
+                //         long stop;
+                //         if (slice.stop != null) {
+                //             if (slice.stop.value < 0) {
+                //                 stop = Math.max((this.value.size() + slice.stop.value), 0);
+                //             } else {
+                //                 stop = Math.min(slice.stop.value, this.value.size());
+                //             }
+                //         } else {
+                //             stop = -1;
+                //         }
+                //         sliced = new java.util.ArrayList<org.python.Object>((int) ((start - stop) / (-step)));
+                //         for (long i = start; i > stop; i += step) {
+                //             sliced.add(this.value.get((int) i));
+                //         }
+                //     } else {
+                //         long start;
+                //         if (slice.start != null) {
+                //             if (slice.start.value < 0) {
+                //                 start = Math.max((this.value.size() + slice.start.value), 0);
+                //             } else {
+                //                 start = Math.min(slice.start.value, this.value.size());
+                //             }
+                //         } else {
+                //             start = 0;
+                //         }
+
+                //         long stop;
+                //         if (slice.stop != null) {
+                //             if (slice.stop.value < 0) {
+                //                 stop = Math.max((this.value.size() + slice.stop.value), 0);
+                //             } else {
+                //                 stop = Math.min(slice.stop.value, this.value.size());
+                //             }
+                //         } else {
+                //             stop = this.value.size();
+                //         }
+                //         sliced = new java.util.ArrayList<org.python.Object>((int) ((stop - start) / step));
+                //         for (long i = start; i < stop; i += step) {
+                //             sliced.add(this.value.get((int) i));
+                //         }
+                //     }
+                // }
+                // return new org.python.types.List(sliced);
             } else {
                 int idx;
                 if (index instanceof org.python.types.Bool) {
@@ -398,6 +510,7 @@ public class List extends org.python.types.Object {
                 } else {
                     idx = (int) ((org.python.types.Int) index).value;
                 }
+                idx = this.getRealIndex(idx);
                 if (idx < 0) {
                     if (-idx > this.value.size()) {
                         throw new org.python.exceptions.IndexError("list index out of range");
@@ -431,6 +544,7 @@ public class List extends org.python.types.Object {
             args = {"index", "value"}
     )
     public void __setitem__(org.python.Object index, org.python.Object value) {
+        this.cloneValues();
         try {
 
             int idx;
@@ -541,6 +655,7 @@ public class List extends org.python.types.Object {
             args = {"other"}
     )
     public org.python.Object __add__(org.python.Object other) {
+        this.cloneValues();
         if (other instanceof org.python.types.List) {
             org.python.types.List result = new org.python.types.List();
             result.value.addAll(this.value);
